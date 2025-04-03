@@ -3,6 +3,8 @@ import { FormEvent } from "react";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
 import SuccessModal from "./SuccessModal";
 import ErrorModal from "./ErrorModal";
+import { motion } from "framer-motion";
+import { FaEthereum } from "react-icons/fa";
 
 export default function Faucet() {
   const [isDisabled, setIsDisabled] = useState(true);
@@ -30,11 +32,16 @@ export default function Faucet() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-100 p-4">
-      <div className="w-full max-w-lg rounded-lg bg-white p-8 shadow-lg">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-gray-900 to-black p-4">
+      <motion.div 
+        className="w-full max-w-lg rounded-2xl bg-white p-8 shadow-2xl"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         <div className="text-center">
-          <img className="mx-auto h-16 w-auto" src="logo.png" alt="Testnet Faucet" />
-          <h2 className="mt-4 text-2xl font-bold text-gray-900">Testnet Faucet</h2>
+          <FaEthereum className="mx-auto text-blue-600" size={50} />
+          <h2 className="mt-4 text-3xl font-bold text-gray-900">Testnet Faucet</h2>
           <p className="mt-2 text-sm text-gray-600">
             <a
               href="https://github.com/orgs/0xDeploy/repositories"
@@ -53,7 +60,7 @@ export default function Faucet() {
               name="address"
               type="text"
               required
-              className="block w-full rounded-lg border border-gray-300 p-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+              className="block w-full rounded-xl border border-gray-300 p-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500"
               placeholder="0xdD4c825203f97984e7867F11eeCc813A036089D1"
             />
           </div>
@@ -63,15 +70,16 @@ export default function Faucet() {
               onVerify={(token, ekey) => handleVerificationSuccess(token, ekey)}
             />
           </div>
-          <button
+          <motion.button
             disabled={isDisabled}
             type="submit"
-            className="w-full rounded-lg bg-blue-600 p-3 text-sm font-medium text-white transition-all hover:bg-blue-700 disabled:opacity-50"
+            className="w-full rounded-xl bg-blue-600 p-3 text-sm font-medium text-white transition-all hover:bg-blue-700 disabled:opacity-50"
+            whileHover={{ scale: isDisabled ? 1 : 1.05 }}
           >
             Request Funds
-          </button>
+          </motion.button>
         </form>
-      </div>
+      </motion.div>
       <SuccessModal message={successMessage} />
       <ErrorModal message={errorMessage} />
     </div>
