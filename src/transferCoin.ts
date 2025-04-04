@@ -1,3 +1,4 @@
+import { ethers } from "ethers";
 import wallet from "./wallet";
 
 type TransferCoin = {
@@ -5,25 +6,24 @@ type TransferCoin = {
   message: string;
 };
 
-/*
- * Transfer coin to address. This is native token ie ETH
- * @param {string} address - The address to transfer to
- */
 export default async function transferCoin(address: string): Promise<TransferCoin> {
   try {
+    const amount = process.env.VALUE || "0.1"; // default fallback
+
     const transaction = await wallet.sendTransaction({
       to: address,
-      value: process.env.VALUE as string,
+      value: ethers.utils.parseEther(amount), // ✅ Fix untuk error hexlify
     });
+
     return {
       success: true,
       message: transaction.hash,
     };
-  } catch (error) {
-    console.error(error)
+  } catch (error: any) {
+    console.error(error);
     return {
       success: false,
-      message: "Unable to Send Transaction",
+      message: error.message || "Unable to Send Transaction",
     };
   }
 }
