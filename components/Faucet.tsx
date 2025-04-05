@@ -19,28 +19,27 @@ export default function Faucet() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsDisabled(true);
-  
+
+    const address = event.currentTarget.address.value;
+
     try {
       const response = await fetch("/api/faucet", {
         method: "POST",
-        body: JSON.stringify({
-          address: event.currentTarget.address.value,
-          hcaptchaToken,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ address, hcaptchaToken }),
       });
-  
+
       const data = await response.json();
-  
+
       if (!response.ok) {
-        setErrorMessage(data.message || "Something went wrong.");
+        setErrorMessage(data.message || "An error occurred");
       } else {
         setSuccessMessage(data.message);
       }
-    } catch (error) {
-      setErrorMessage("Network error. Please try again later.");
+    } catch (err) {
+      setErrorMessage("Unexpected error occurred.");
     }
   };
-  
 
   return (
     <>
@@ -125,8 +124,13 @@ export default function Faucet() {
         </div>
       </div>
 
-      <SuccessModal message={successMessage} />
-      <ErrorModal message={errorMessage} />
+      {successMessage && (
+        <SuccessModal message={successMessage} />
+      )}
+
+      {errorMessage && (
+        <ErrorModal message={errorMessage} />
+      )}
     </>
   );
 }
