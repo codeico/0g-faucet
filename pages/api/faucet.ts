@@ -43,9 +43,8 @@ export default async function handler(
     if (ipCooldownTimestamp) {
       const timeLeftSeconds = parseInt(ipCooldownTimestamp) + cooldownSeconds - now;
       const minutes = Math.ceil(timeLeftSeconds / 60);
-      return res.status(429).json({
-        message: `Too many requests from this IP. Please wait ${minutes} minute(s) before trying again.`,
-      });
+      return res.status(429).json({ message: "Please wait 23 hours before next request." });
+
     }
 
     // Check wallet cooldown
