@@ -19,35 +19,31 @@ export default function Faucet() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsDisabled(true);
-  
+    setSuccessMessage("");
+    setErrorMessage("");
+
     const address = event.currentTarget.address.value;
-  
+
     try {
       const response = await fetch("/api/faucet", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ address, hcaptchaToken }),
       });
-  
-      let data;
-  
-      try {
-        data = await response.json();
-      } catch (jsonError) {
-        // JSON parsing error, e.g. HTML or empty response
-        throw new Error("Invalid JSON in server response");
-      }
-  
+
+      const data = await response.json();
+
       if (!response.ok) {
         setErrorMessage(data.message || "An error occurred");
       } else {
         setSuccessMessage(data.message);
       }
-    } catch (err: any) {
-      setErrorMessage(err.message || "Unexpected error occurred.");
+    } catch (err) {
+      setErrorMessage("Unexpected error occurred.");
     }
   };
-  
 
   return (
     <>
@@ -132,13 +128,8 @@ export default function Faucet() {
         </div>
       </div>
 
-      {successMessage && (
-        <SuccessModal message={successMessage} />
-      )}
-
-      {errorMessage && (
-        <ErrorModal message={errorMessage} />
-      )}
+      <SuccessModal message={successMessage} />
+      <ErrorModal message={errorMessage} />
     </>
   );
 }
