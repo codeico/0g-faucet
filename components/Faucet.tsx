@@ -36,7 +36,7 @@ export default function Faucet() {
 
   return (
     <>
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#151923]">
+      <div className="flex flex-col items-center justify-center min-h-screen px-4 py-10 sm:px-6 lg:px-8 bg-[#151923]">
         <div className="w-full max-w-md space-y-8">
           <div className="bg-[#1c212e] rounded-xl shadow-2xl overflow-hidden mx-4">
             <div>
