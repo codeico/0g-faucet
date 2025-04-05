@@ -1,4 +1,3 @@
-// pages/api/faucet.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ethers } from "ethers";
 import { verify } from "hcaptcha";
@@ -21,6 +20,8 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Message>
 ) {
+  res.setHeader("Content-Type", "application/json"); // Force JSON for all responses
+
   try {
     const { address, hcaptchaToken } = JSON.parse(req.body);
 
@@ -42,10 +43,12 @@ export default async function handler(
 
     if (ipCooldownTimestamp) {
       const timeLeftSeconds = parseInt(ipCooldownTimestamp) + cooldownSeconds - now;
-      const minutes = Math.ceil(timeLeftSeconds / 60);
-      return res.status(429).json({
-        message: `Please wait ${minutes} minute(s) before requesting again from this IP.`,
-      });
+      if (timeLeftSeconds > 0) {
+        const minutes = Math.ceil(timeLeftSeconds / 60);
+        return res
+          .status(429)
+          .json({ message: `Please wait ${minutes} minute(s) before requesting again from this IP.` });
+      }
     }
 
     const recieved = await canRecieve(address);
@@ -63,7 +66,7 @@ export default async function handler(
 
     return res.status(200).json({ message: transfer.message });
   } catch (err: any) {
-    console.error("Faucet Error:", err);
+    console.error("API error:", err);
     return res.status(500).json({ message: "Server error occurred." });
   }
 }
