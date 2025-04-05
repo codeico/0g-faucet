@@ -65,9 +65,13 @@ export default function Faucet() {
               </div>
 
               <div className="flex justify-flex justify-center bg-[#232836] p-4 rounded-lg mb-6">
-                <div>
-                  <HCaptcha sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY as string} onVerify={(token, ekey) => handleVerificationSuccess(token, ekey)} />
+                <div className="w-full max-w-sm mx-auto">
+                  <HCaptcha
+                    sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY as string}
+                    onVerify={(token, ekey) => handleVerificationSuccess(token, ekey)}
+                  />
                 </div>
+
               </div>
               <div>
                 <button disabled={isDisabled} type="submit" className="group relative flex w-full justify-center rounded-lg border border-transparent bg-[#5170FF] py-3 px-4 text-sm font-semibold text-white hover:bg-[#4060EE] focus:outline-none focus:ring-2 focus:ring-[#5170FF]/50 transition-all duration-200 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed mb-2"><span className="absolute inset-y-0 left-0 flex items-center pl-3"><svg className="h-5 w-5 text-[#B4C6FF] group-hover:text-[#D1DCFF]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd"></path></svg></span>
