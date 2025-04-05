@@ -69,7 +69,7 @@ export default function Faucet() {
                   name="address"
                   type="text"
                   required
-                  placeholder="0xdD4c82..."
+                  placeholder="0xf317cD3dEf951c197678E4596561B1C4c3F049B3"
                   className="w-full rounded-md border border-gray-600 bg-[#232836] px-3 py-2 text-gray-200 placeholder-gray-500 focus:border-[#64B6AC] focus:ring-1 focus:ring-[#64B6AC] outline-none text-sm"
                 />
               </div>
