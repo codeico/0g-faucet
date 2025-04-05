@@ -82,14 +82,23 @@ export default function Faucet() {
                   onVerify={handleVerificationSuccess}
                 />
               </div>
-
-              <button
-                type="submit"
-                disabled={isDisabled}
-                className="w-full bg-[#5170FF] text-white text-sm font-semibold py-2 rounded-md hover:bg-[#4060EE] disabled:opacity-50 disabled:cursor-not-allowed transition"
-              >
-                🚀 Request Tokens
-              </button>
+              <div className="space-y-2">
+                <button
+                  type="submit"
+                  disabled={isDisabled}
+                  className="w-full bg-[#5170FF] text-white text-sm font-semibold py-2 rounded-md hover:bg-[#4060EE] disabled:opacity-50 disabled:cursor-not-allowed transition"
+                >
+                  🚀 Request Tokens
+                </button>
+                <a
+                  href="https://0g.exploreme.pro/validators/0gvaloper17vtu6000j5wpjancu3vk2cd3cnplqjdnn4rrfn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-block text-center bg-green-600 text-white text-sm font-semibold py-2 rounded-md hover:bg-green-700 transition"
+                >
+                  🔗 Staking A0GI
+                </a>
+              </div>
             </form>
           </div>
 
