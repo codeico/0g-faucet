@@ -23,7 +23,7 @@ export default async function transferCoin(address: string): Promise<TransferCoi
     console.error(error);
     return {
       success: false,
-      message: error.message || "Unable to send transaction",
+      message: error.message || "Unable to Send Transaction",
     };
   }
 }
