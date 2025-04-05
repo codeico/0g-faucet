@@ -24,24 +24,13 @@ export default async function handler(
     console.log("🚀 Incoming request");
 
     if (req.method !== "POST") {
-      console.log("❌ Invalid method");
       return res.status(405).json({ message: "Method Not Allowed" });
     }
 
-    // Parse JSON body safely
-    let address = "";
-    let hcaptchaToken = "";
-    try {
-      const parsed = JSON.parse(req.body);
-      address = parsed.address;
-      hcaptchaToken = parsed.hcaptchaToken;
-    } catch (e) {
-      console.error("❌ JSON parse error:", e);
-      return res.status(400).json({ message: "Invalid request body" });
-    }
+    // ✅ Gunakan req.body langsung (tidak perlu JSON.parse)
+    const { address, hcaptchaToken } = req.body;
 
     if (!ethers.utils.isAddress(address)) {
-      console.log("❌ Invalid address");
       return res.status(400).json({ message: "Invalid Address" });
     }
 
@@ -50,46 +39,40 @@ export default async function handler(
       hcaptchaToken
     );
     if (!verified.success) {
-      console.log("❌ Invalid captcha");
       return res.status(401).json({ message: "Invalid Captcha" });
     }
 
     const ip = getClientIp(req);
-    console.log(`🌐 IP: ${ip}`);
     const ipKey = `ip:${ip}`;
     const now = Math.floor(Date.now() / 1000);
     const cooldownHours = parseInt(process.env.COOLDOWN_HOURS || "24");
     const cooldownSeconds = cooldownHours * 60 * 60;
 
-    // Check IP cooldown
+    // Cek cooldown IP
     const ipCooldown = await redis.get(ipKey);
     if (ipCooldown) {
       const remaining = parseInt(ipCooldown) + cooldownSeconds - now;
       const minutes = Math.ceil(remaining / 60);
-      console.log(`⏱️ IP rate limited: ${minutes}m remaining`);
       return res
         .status(429)
         .json({ message: `Please wait ${minutes} minutes before requesting again (IP).` });
     }
 
-    // Check wallet cooldown
+    // Cek cooldown wallet
     const canReceive = await canRecieve(address);
     if (!canReceive.success) {
-      console.log("⏱️ Wallet cooldown:", canReceive.message);
       return res.status(429).json({ message: canReceive.message });
     }
 
     const transfer = await transferCoin(address);
     if (!transfer.success) {
-      console.log("❌ Transfer failed:", transfer.message);
       return res.status(400).json({ message: transfer.message });
     }
 
-    // Save cooldowns
+    // Set redis cooldown
     await redis.set(address, now);
     await redis.set(ipKey, now, "EX", cooldownSeconds);
 
-    console.log("✅ Transfer success:", transfer.message);
     return res.status(200).json({ message: transfer.message });
   } catch (err: any) {
     console.error("🔥 Server Error:", err);
