@@ -1,3 +1,4 @@
+// components/Faucet.tsx
 import { useState } from "react";
 import { FormEvent } from "react";
 import HCaptcha from "@hcaptcha/react-hcaptcha";
@@ -10,7 +11,7 @@ export default function Faucet() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleVerificationSuccess = async (token: string, ekey: string) => {
+  const handleVerificationSuccess = (token: string) => {
     setHcaptchaToken(token);
     setIsDisabled(false);
   };
@@ -19,18 +20,24 @@ export default function Faucet() {
     event.preventDefault();
     setIsDisabled(true);
 
-    const response = await fetch("/api/faucet", {
-      method: "POST",
-      body: JSON.stringify({
-        address: event.currentTarget.address.value,
-        hcaptchaToken,
-      }),
-    });
+    const address = event.currentTarget.address.value;
 
-    const data = await response.json();
+    try {
+      const response = await fetch("/api/faucet", {
+        method: "POST",
+        body: JSON.stringify({ address, hcaptchaToken }),
+      });
 
-    if (response.status !== 200) return setErrorMessage(data.message);
-    setSuccessMessage(data.message);
+      const data = await response.json();
+
+      if (!response.ok) {
+        setErrorMessage(data.message || "An error occurred");
+      } else {
+        setSuccessMessage(data.message);
+      }
+    } catch (err) {
+      setErrorMessage("Unexpected error occurred.");
+    }
   };
 
   return (
