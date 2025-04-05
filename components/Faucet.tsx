@@ -110,7 +110,7 @@ export default function Faucet() {
             </form>
           </div>
 
-          <p className="text-center text-lg text-gray-500">
+          <p className="text-center text-lg font-bold text-gray-500">
             One request per address every 24 hours
           </p>
         </div>
