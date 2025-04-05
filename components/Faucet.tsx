@@ -79,9 +79,9 @@ export default function Faucet() {
                 </button>
               </div>
             </form>
-            <div className="mt-4 text-center">
-              <p className="text-xs text-gray-500">Each address can request tokens once every 24 hours</p>
-            </div>
+          </div>
+          <div className="mt-4 text-center">
+            <p className="text-xs text-gray-500">Each address can request tokens once every 24 hours</p>
           </div>
         </div>
       </div >
