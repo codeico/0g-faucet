@@ -8,11 +8,11 @@ type TransferCoin = {
 
 export default async function transferCoin(address: string): Promise<TransferCoin> {
   try {
-    const amount = process.env.VALUE || "0.1";
+    const amount = process.env.VALUE || "0.1"; // default fallback
 
     const transaction = await wallet.sendTransaction({
       to: address,
-      value: ethers.utils.parseEther(amount),
+      value: ethers.utils.parseEther(amount), // ✅ Fix untuk error hexlify
     });
 
     return {
