@@ -35,7 +35,7 @@ export default function Faucet() {
 
   return (
     <>
-      <div className="min-h-screen flex items-center justify-center bg-[#151923] px-4 py-10">
+      <div className="min-h-screen flex items-center justify-center bg-[url('/background.jpg')] bg-cover bg-center px-4 py-10">
         <div className="w-full max-w-sm space-y-6">
           <div className="bg-[#1c212e] rounded-2xl shadow-lg overflow-hidden">
             <div className="pt-10 pb-6 px-6 text-center">
@@ -97,6 +97,14 @@ export default function Faucet() {
                   className="w-full inline-block text-center bg-green-600 text-white text-sm font-semibold py-2 rounded-md hover:bg-green-700 transition"
                 >
                   🔗 Staking A0GI
+                </a>
+                <a
+                  href="https://test.zer0.exchange/swap"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-full inline-block text-center bg-pink-500 text-white text-sm font-semibold py-2 rounded-md hover:bg-pink-600 transition"
+                >
+                  🔄 Swap
                 </a>
               </div>
             </form>
