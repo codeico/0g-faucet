@@ -37,11 +37,13 @@ export default function Faucet() {
   return (
     <>
       <div className="flex flex-col items-center justify-center min-h-screen px-4 py-10 sm:px-6 lg:px-8 bg-[#151923]">
-        <div className="w-full max-w-md space-y-8">
+        <div className="w-full max-w-md">
           <div className="bg-[#1c212e] rounded-xl shadow-2xl overflow-hidden mx-4">
-            <div>
-              <img className="mx-auto h-12 w-auto" src="0g.png" alt="BANGCODE 0G Testnet Faucet" />
-              <h2 className="text-center text-3xl font-bold text-[#64B6AC]">BANGCODE 0G Testnet Faucet</h2>
+            <div className="pt-10 pb-6 px-8">
+              <div className="flex justify-center">
+                <img className="h-16 w-auto mb-4" src="0g.png" alt="BANGCODE | 0G Testnet Faucet"></img>
+              </div>
+              <h2 className="text-center text-3xl font-bold text-[#64B6AC]">BANGCODE | 0G Testnet Faucet</h2>
               <p className="mt-2 text-center text-sm text-gray-600">
                 Request tokens for the 0G testnet network
               </p>
@@ -54,13 +56,15 @@ export default function Faucet() {
                 </div>
               </div>
             </div>
-            <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-              <div className="-space-y-px rounded-md shadow-sm">
-                <div>
-                  <input id="address" name="address" type="string" required className="relative block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" placeholder="0xdD4c825203f97984e7867F11eeCc813A036089D1" />
-                </div>
+            <form className="px-6 pb-6" onSubmit={handleSubmit}>
+              <div className="mb-4">
+                <label htmlFor="address" className="block text-sm font-medium text-gray-300 mb-2">
+                  Wallet Address
+                </label>
+                <input id="address" name="address" type="text" required className="relative block w-full appearance-none rounded-lg border border-gray-600 bg-[#232836] px-4 py-3 text-gray-200 placeholder-gray-500 focus:border-[#64B6AC] focus:outline-none focus:ring-2 focus:ring-[#64B6AC]/30 sm:text-sm" placeholder="0xdD4c825203f97984e7867F11eeCc813A036089D1"/>
               </div>
-              <div className="flex justify-center">
+
+              <div className="flex justify-flex justify-center bg-[#232836] p-4 rounded-lg mb-6">
                 <HCaptcha sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY as string} onVerify={(token, ekey) => handleVerificationSuccess(token, ekey)} />
               </div>
               <div>
