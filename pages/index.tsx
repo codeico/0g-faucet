@@ -5,10 +5,10 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Testnet Faucet</title>
-        <meta name="description" content="Testnet Facuet" />
+        <title>BANGCODE | 0G Testnet Faucet</title>
+        <meta name="description" content="BANGCODE | 0G Testnet Faucet" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/logo.png" />
+        <link rel="icon" href="/0g.png" />
       </Head>
       <main>
         <Faucet />
