@@ -4,7 +4,7 @@
 
 ## Demo
 
-https://0xdeploy-faucet-demo.vercel.app/
+https://0g-faucet.bangcode.id
 
 ## Video Tutorial
 
