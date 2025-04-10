@@ -53,7 +53,7 @@ export default function Faucet() {
             </div>
 
             <div className="bg-[#232836] mx-5 mb-5 p-3 rounded-lg border-l-4 border-[#FFB800] text-sm text-gray-300">
-              <p>⚠️ You can request 0.1 0G token every 24 hours per address.</p>
+              <p>⚠️ You can request 0.2 0G token every 24 hours per address.</p>
             </div>
 
             <form className="px-6 pb-6 space-y-5" onSubmit={handleSubmit}>
