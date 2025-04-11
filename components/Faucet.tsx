@@ -91,7 +91,7 @@ export default function Faucet() {
                   🚀 Request Tokens
                 </button>
                 <a
-                  href="https://0g.exploreme.pro/validators/0gvaloper17vtu6000j5wpjancu3vk2cd3cnplqjdnn4rrfn"
+                  href="https://0g.exploreme.pro/validators/0gvaloper145v6t9jkq2xgj56jt85g9d3ur36a6cse7a6fxn"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full inline-block text-center bg-green-600 text-white text-sm font-semibold py-2 rounded-md hover:bg-green-700 transition"
