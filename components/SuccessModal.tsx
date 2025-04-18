@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { X } from "lucide-react";
 
 type Props = {
   message: string;
@@ -6,44 +7,57 @@ type Props = {
 
 export default function SuccessModal(props: Props) {
   const { message } = props;
-  const [show, setShow] = useState(message);
+  const [show, setShow] = useState(!!message);
 
   useEffect(() => {
-    setShow(message);
+    setShow(!!message);
   }, [message]);
 
-  return (
-    <>
-      <div hidden={!show} className="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+  if (!show) return null;
 
-        <div className="fixed inset-0 z-10 overflow-y-auto">
-          <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-            <div className="relative transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
-              <div>
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
-                  <svg className="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                </div>
-                <div className="mt-3 text-center sm:mt-5">
-                  <h3 className="text-lg font-medium leading-6 text-gray-900" id="modal-title">
-                    Transaction Successful
-                  </h3>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500 break-words">{message}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-5 sm:mt-6">
-                <button onClick={() => setShow("")} type="button" className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:text-sm">
-                  Close
-                </button>
-              </div>
-            </div>
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+      <div className="bg-[#1e1e2f] rounded-2xl shadow-xl p-6 w-[360px] text-center relative">
+        {/* Close icon (optional) */}
+        <button
+          onClick={() => setShow(false)}
+          className="absolute top-3 right-3 text-gray-400 hover:text-white"
+        >
+          <X size={18} />
+        </button>
+
+        {/* Checkmark icon */}
+        <div className="mb-4">
+          <div className="w-12 h-12 mx-auto flex items-center justify-center rounded-full bg-green-600/10">
+            <svg
+              className="w-6 h-6 text-green-400"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
           </div>
         </div>
+
+        {/* Text content */}
+        <h3 className="text-white text-lg font-semibold mb-2">
+          Transaction Successful
+        </h3>
+        <p className="text-gray-400 text-sm mb-2">Transaction Hash:</p>
+        <p className="text-teal-300 text-sm break-words font-mono mb-6">
+          {message}
+        </p>
+
+        {/* Close Button */}
+        <button
+          onClick={() => setShow(false)}
+          className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-5 py-2 rounded-lg transition"
+        >
+          Close
+        </button>
       </div>
-    </>
+    </div>
   );
 }
