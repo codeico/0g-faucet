@@ -10,34 +10,47 @@ type Message = {
   message: string;
 };
 
-/*
- * Transfer coin to address. This is native token ie ETH
- * @param {string} address - The address to transfer to
- * @param {string} hcaptchaToken - The token from the hcaptcha
- * @returns {Message} - The message to display to the user, either error message or transaction hash
- * @example curl -X POST -H "Content-Type: application/json" -d '{"address": "0x123", "hcaptchaToken": "123"}' http://localhost:3000/api/faucet
- */
+// IP cooldown time in seconds (default 24 jam)
+const IP_COOLDOWN_SECONDS = parseInt(process.env.IP_COOLDOWN_SECONDS || "86400");
+
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Message>) {
-  // parse the request body
   const { address, hcaptchaToken } = JSON.parse(req.body);
-  // verify address
+
+  // ✅ Ambil IP address dari request
+  const forwarded = req.headers["x-forwarded-for"];
+  const ip = typeof forwarded === "string" ? forwarded.split(",")[0].trim() : req.socket.remoteAddress;
+
+  if (!ip) {
+    return res.status(400).json({ message: "Gagal membaca IP address" });
+  }
+
+  const ipKey = `cooldown_ip_${ip}`;
+  const ipCooldown = await redis.get(ipKey);
+  if (ipCooldown) {
+    return res.status(429).json({
+      message: "Alamat IP ini sudah melakukan klaim. Harap tunggu sebelum mencoba lagi.",
+    });
+  }
+
+  // ✅ Validasi alamat wallet
   const isAddress = ethers.utils.isAddress(address);
-  // if invalid address
   if (!isAddress) return res.status(400).json({ message: "Invalid Address" });
-  // verify the captcha
+
+  // ✅ Verifikasi captcha
   const verified = await verify(process.env.HCAPTCHA_SECRET as string, hcaptchaToken);
-  // if invalid captcha, return 401
   if (!verified.success) return res.status(401).json({ message: "Invalid Captcha" });
-  // if cooldown is enough to recieve funds
+
+  // ✅ Cek cooldown berdasarkan wallet
   const recieved = await canRecieve(address);
-  // if not enough time has passed
   if (!recieved.success) return res.status(400).json({ message: recieved.message });
-  // transfer coin
+
+  // ✅ Lakukan transfer
   const transfer = await transferCoin(address);
-  // if transfer was unsuccessful
   if (!transfer.success) return res.status(400).json({ message: transfer.message });
-  // update the last transfer timestamp to now
+
+  // ✅ Simpan waktu klaim berdasarkan address & IP
   await redis.set(address, Math.floor(Date.now() / 1000));
-  // transfer is successful
+  await redis.set(ipKey, "1", "EX", IP_COOLDOWN_SECONDS);
+
   return res.status(200).json({ message: transfer.message });
 }
