@@ -10,7 +10,7 @@ export default function Faucet() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  const handleVerificationSuccess = async (token: string, ekey: string) => {
+  const handleVerificationSuccess = async (token: string) => {
     setHcaptchaToken(token);
     setIsDisabled(false);
   };
@@ -19,18 +19,41 @@ export default function Faucet() {
     event.preventDefault();
     setIsDisabled(true);
 
-    const response = await fetch("/api/faucet", {
-      method: "POST",
-      body: JSON.stringify({
-        address: event.currentTarget.address.value,
-        hcaptchaToken,
-      }),
-    });
+    const form = event.currentTarget;
+    const address = form.address.value.trim();
+    const honey = form.honey.value; // honeypot field
 
-    const data = await response.json();
+    // Honeypot check (bot biasanya mengisi ini)
+    if (honey) {
+      setErrorMessage("Bot detected.");
+      return;
+    }
 
-    if (response.status !== 200) return setErrorMessage(data.message);
-    setSuccessMessage(data.message);
+    // Simple client-side validation
+    if (!address.startsWith("0x") || address.length !== 42) {
+      setErrorMessage("Invalid wallet address.");
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/faucet", {
+        method: "POST",
+        body: JSON.stringify({
+          address,
+          hcaptchaToken,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.status !== 200) {
+        setErrorMessage(data.message);
+      } else {
+        setSuccessMessage(data.message);
+      }
+    } catch (err) {
+      setErrorMessage("Network error. Try again later.");
+    }
   };
 
   return (
@@ -58,10 +81,7 @@ export default function Faucet() {
 
             <form className="px-6 pb-6 space-y-5" onSubmit={handleSubmit}>
               <div>
-                <label
-                  htmlFor="address"
-                  className="block text-sm font-medium text-gray-300 mb-1"
-                >
+                <label htmlFor="address" className="block text-sm font-medium text-gray-300 mb-1">
                   Wallet Address
                 </label>
                 <input
@@ -72,16 +92,23 @@ export default function Faucet() {
                   placeholder="0xf317cD3dEf951c197678E4596561B1C4c3F049B3"
                   className="w-full rounded-md border border-gray-600 bg-[#232836] px-3 py-2 text-gray-200 placeholder-gray-500 focus:border-[#64B6AC] focus:ring-1 focus:ring-[#64B6AC] outline-none text-sm"
                 />
+                {/* Honeypot field (invisible for real users) */}
+                <input
+                  type="text"
+                  name="honey"
+                  className="hidden"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
               </div>
 
               <div className="flex justify-center bg-[#232836] p-3 rounded-md">
                 <HCaptcha
-                  sitekey={
-                    process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY as string
-                  }
+                  sitekey={process.env.NEXT_PUBLIC_HCAPTCHA_SITE_KEY as string}
                   onVerify={handleVerificationSuccess}
                 />
               </div>
+
               <div className="space-y-2">
                 <button
                   type="submit"
@@ -90,6 +117,7 @@ export default function Faucet() {
                 >
                   🚀 Request Tokens
                 </button>
+
                 <a
                   href="https://0g.exploreme.pro/validators/0gvaloper145v6t9jkq2xgj56jt85g9d3ur36a6cse7a6fxn"
                   target="_blank"
