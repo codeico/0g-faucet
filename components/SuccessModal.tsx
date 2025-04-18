@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { X } from "lucide-react";
 
 type Props = {
   message: string;
@@ -18,14 +17,6 @@ export default function SuccessModal(props: Props) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
       <div className="bg-[#1e1e2f] rounded-2xl shadow-xl p-6 w-[360px] text-center relative">
-        {/* Close icon (optional) */}
-        <button
-          onClick={() => setShow(false)}
-          className="absolute top-3 right-3 text-gray-400 hover:text-white"
-        >
-          <X size={18} />
-        </button>
-
         {/* Checkmark icon */}
         <div className="mb-4">
           <div className="w-12 h-12 mx-auto flex items-center justify-center rounded-full bg-green-600/10">
@@ -45,20 +36,26 @@ export default function SuccessModal(props: Props) {
         <h3 className="text-white text-lg font-semibold mb-2">
           Transaction Successful
         </h3>
-        <p className="text-gray-400 text-sm mb-2">Transaction Hash:</p>
-        <p className="text-teal-300 text-sm break-words font-mono mb-6">
-          {message}
-        </p>
+
+        {/* Transaction Hash */}
+        <div className="mt-3">
+          <p className="text-sm text-gray-300 break-words">Transaction Hash:</p>
+          <p className="mt-1 text-xs font-mono text-[#8FD1C8] break-all bg-[#232836] p-3 rounded-lg">
+            {message}
+          </p>
+        </div>
 
         {/* Close Button */}
-        <button
-          onClick={() => setShow(false)}
-          className="bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-5 py-2 rounded-lg transition"
-        >
-          Close
-        </button>
+        <div className="mt-6">
+          <button
+            onClick={() => setShow(false)}
+            type="button"
+            className="inline-flex w-full justify-center rounded-lg border border-transparent bg-[#5170FF] px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-[#4060EE] focus:outline-none focus:ring-2 focus:ring-[#5170FF]/50 transition-all duration-200 ease-in-out sm:text-sm"
+          >
+            Close
+          </button>
+        </div>
       </div>
     </div>
   );
 }
- 
