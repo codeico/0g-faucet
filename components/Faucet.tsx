@@ -36,7 +36,7 @@ export default function Faucet() {
     }
 
     try {
-      const response = await fetch("/api/faucet", {
+      const response = await fetch("/api/proxy-faucet", {
         method: "POST",
         body: JSON.stringify({
           address,
