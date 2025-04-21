@@ -1,3 +1,4 @@
+// faucet.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ethers } from "ethers";
 import { verify } from "hcaptcha";
