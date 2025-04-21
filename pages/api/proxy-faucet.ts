@@ -14,10 +14,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const userAgent = req.headers["user-agent"] || "";
 
   // ❌ Tolak jika bukan dari frontend kamu
-  if (
-    !origin?.startsWith(ALLOWED_ORIGIN) &&
-    !referer.startsWith(ALLOWED_ORIGIN)
-  ) {
+if (
+  !(origin && origin.startsWith(ALLOWED_ORIGIN)) &&
+  !(referer && referer.startsWith(ALLOWED_ORIGIN))
+) {
     return res.status(403).json({ message: "Forbidden: Invalid origin." });
   }
 
