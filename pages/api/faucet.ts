@@ -1,4 +1,3 @@
-// faucet.ts
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ethers } from "ethers";
 import { verify } from "hcaptcha";
@@ -12,6 +11,7 @@ type Message = {
 
 const IP_COOLDOWN_SECONDS = parseInt(process.env.IP_COOLDOWN_SECONDS || "86400"); // 24 jam default
 const ADDRESS_COOLDOWN_SECONDS = parseInt(process.env.ADDRESS_COOLDOWN_SECONDS || "86400");
+const ALLOWED_DOMAIN = "https://0g-faucet.bangcode.id"; // Allowed domain
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<Message>) {
   try {
@@ -23,10 +23,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     if (!address || !hcaptchaToken) {
       return res.status(400).json({ message: "Missing address or captcha token." });
-    }
-    const faucetSecret = req.headers["x-faucet-auth"];
-    if (faucetSecret !== process.env.FAUCET_SECRET) {
-      return res.status(401).json({ message: "Unauthorized" });
     }
 
     // Extract IP Address
@@ -58,10 +54,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       return res.status(400).json({ message: "Suspicious user-agent." });
     }
 
-    // Check Referer
+    // Check Referer for domain validation
     const referer = req.headers["referer"] || "";
-    if (!referer.includes("0g")) {
-      return res.status(400).json({ message: "Invalid referer." });
+    if (!referer.startsWith(ALLOWED_DOMAIN)) {
+      return res.status(400).json({ message: "Invalid referer. Request must come from the allowed domain." });
     }
 
     // ✅ hCaptcha Verification
