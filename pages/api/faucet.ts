@@ -23,6 +23,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     if (!address || !hcaptchaToken) {
       return res.status(400).json({ message: "Missing address or captcha token." });
     }
+    const faucetSecret = req.headers["x-faucet-auth"];
+    if (faucetSecret !== process.env.FAUCET_SECRET) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
 
     // Extract IP Address
     const forwarded = req.headers["x-forwarded-for"];
